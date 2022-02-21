@@ -1,3 +1,5 @@
+import 'package:amz_finance/pages/budgeting.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ViewWallet extends StatelessWidget {
@@ -133,7 +135,8 @@ class ViewWallet extends StatelessWidget {
                   label: 'Transactions',
                 ),
                 ManageContainer(
-                  onTap: () {},
+                  onTap: () => Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Budgeting())),
                   label: 'Budgeting',
                 ),
                 ManageContainer(

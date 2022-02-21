@@ -1,3 +1,6 @@
+import 'package:amz_finance/models/budget.dart';
+import 'package:amz_finance/pages/budgeting.dart';
+import 'package:amz_finance/pages/expenses_dashboard.dart';
 import 'package:amz_finance/pages/wallet_dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Roboto',
       ),
-      home: const WalletDashboard(),
+      home: const ExpensesDashboard(),
     );
   }
 }
