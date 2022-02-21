@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "375671646003",
+    "project_id": "amz-finance-7175a",
+    "storage_bucket": "amz-finance-7175a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375671646003:android:61d936efd9f0fc2ab68046",
+        "android_client_info": {
+          "package_name": "com.amz.amz_finance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375671646003-v4togll7f654okarmfmqaqmutfmcgcb4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amz.amz_finance",
+            "certificate_hash": "695f7d77fca288c74ab7508a6f0743cb1c65a23b"
+          }
+        },
+        {
+          "client_id": "375671646003-05r1kmdbjlb6jqj9d1lvmurbu17vh3fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTmNj8EoHgh1kYvU7vwNksgZWcYg8hBnU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375671646003-05r1kmdbjlb6jqj9d1lvmurbu17vh3fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
