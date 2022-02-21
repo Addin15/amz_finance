@@ -1,9 +1,14 @@
+import 'package:amz_finance/constant/constant.dart';
+import 'package:amz_finance/models/bank.dart';
 import 'package:amz_finance/pages/budgeting.dart';
+import 'package:amz_finance/pages/transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ViewWallet extends StatelessWidget {
-  const ViewWallet({Key? key}) : super(key: key);
+  const ViewWallet(this.bank, {Key? key}) : super(key: key);
+
+  final Bank bank;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,9 @@ class ViewWallet extends StatelessWidget {
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              'CIMB',
+              Constants.getBankName(bank.bank!),
               style: TextStyle(
                 fontSize: 26,
                 color: Colors.black,
@@ -84,7 +89,7 @@ class ViewWallet extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      '1226 7128 8128 0192',
+                      bank.accountNumber!,
                       style: TextStyle(fontSize: 22),
                     ),
                   ],
@@ -116,7 +121,7 @@ class ViewWallet extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'RM1500.00',
+                    'RM${bank.balance!.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: 28,
                       color: Colors.white,
@@ -131,7 +136,8 @@ class ViewWallet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ManageContainer(
-                  onTap: () {},
+                  onTap: () => Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Transactions())),
                   label: 'Transactions',
                 ),
                 ManageContainer(
