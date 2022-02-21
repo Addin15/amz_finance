@@ -1,8 +1,11 @@
+import 'package:amz_finance/models/bank.dart';
 import 'package:flutter/material.dart';
 import 'categorizing.dart';
 
 class Transactions extends StatelessWidget {
-  const Transactions({Key? key}) : super(key: key);
+  const Transactions(this.bank, {Key? key}) : super(key: key);
+
+  final Bank? bank;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,7 @@ class Transactions extends StatelessWidget {
                       width: 50,
                     ),
                     Text(
-                      'RM 1520.20',
+                      'RM${bank!.balance!.toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.white, fontSize: 36),
                     )
                   ],

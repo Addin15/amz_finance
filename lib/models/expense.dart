@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Expense {
-  String? name;
+  String? description;
   double? amount;
   Timestamp? timestamp;
   String? category;
   String? account;
 
   Expense({
-    this.name,
+    this.description,
     this.amount,
     this.timestamp,
     this.category,
@@ -16,8 +16,8 @@ class Expense {
   });
 
   Expense.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        amount = json['amount'],
+      : description = json['name'],
+        amount = json['amount'].toDouble(),
         timestamp = json['timestamp'],
         category = json['category'],
         account = json['account'];

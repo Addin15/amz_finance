@@ -1,6 +1,7 @@
 import 'package:amz_finance/constant/constant.dart';
 import 'package:amz_finance/models/bank.dart';
 import 'package:amz_finance/pages/budgeting.dart';
+import 'package:amz_finance/pages/expenses_dashboard.dart';
 import 'package:amz_finance/pages/view_wallet.dart';
 import 'package:amz_finance/services/auth.dart';
 import 'package:amz_finance/services/database.dart';
@@ -122,7 +123,10 @@ class WalletDashboard extends StatelessWidget {
                 trailing: Icon(Icons.arrow_forward_ios_outlined),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => ExpensesDashboard())),
                 contentPadding: EdgeInsets.only(left: 10),
                 title: Text(
                   'Overall expenses',

@@ -47,16 +47,6 @@ class ViewWallet extends StatelessWidget {
           ],
         ),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.menu,
-                size: 40,
-                color: Colors.black54,
-              )),
-          SizedBox(width: 20),
-        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -136,8 +126,10 @@ class ViewWallet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ManageContainer(
-                  onTap: () => Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Transactions())),
+                  onTap: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => Transactions(bank))),
                   label: 'Transactions',
                 ),
                 ManageContainer(

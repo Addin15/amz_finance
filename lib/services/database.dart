@@ -1,5 +1,6 @@
 import 'package:amz_finance/models/bank.dart';
 import 'package:amz_finance/models/budget.dart';
+import 'package:amz_finance/models/expense.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
@@ -42,5 +43,16 @@ class DatabaseService {
     await _db.collection('users').doc(uid).update({
       'budgets': budgets.map((budget) => Budget.toMap(budget)).toList(),
     });
+  }
+
+  // stream transactions
+  Stream<List<Expense>> streamExpenses(String uid) {
+    return _db
+        .collection('transactions')
+        .doc(uid)
+        .collection('usertransactions')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Expense.fromJson(doc.data())).toList());
   }
 }
