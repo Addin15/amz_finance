@@ -1,5 +1,8 @@
 import 'package:amz_finance/models/budget.dart';
+import 'package:amz_finance/services/auth.dart';
+import 'package:amz_finance/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Budgeting extends StatefulWidget {
   const Budgeting({Key? key}) : super(key: key);
@@ -9,7 +12,7 @@ class Budgeting extends StatefulWidget {
 }
 
 class _BudgetingState extends State<Budgeting> {
-  List<Budget> budgets = [];
+  DatabaseService db = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -49,105 +52,116 @@ class _BudgetingState extends State<Budgeting> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: [
-            budgets.isEmpty
-                ? Expanded(
-                    child: Center(
-                      child: Text(
-                        'You currently have no budget allocated. Click on the button below to allocate a new budget.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink(),
-            Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 10);
-                },
-                itemCount: budgets.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == budgets.length) {
-                    return IconButton(
-                        padding: EdgeInsets.all(0.0),
-                        onPressed: () async {
-                          dynamic result = await showDialog(
-                              context: context,
-                              builder: (context) => addBudget());
+      body: StreamProvider<List<Budget>>.value(
+          value: db.streamBudgets(AuthService().userId),
+          initialData: [],
+          builder: (context, child) {
+            List<Budget> budgets = Provider.of<List<Budget>>(context);
 
-                          if (result != null) {
-                            setState(() {
-                              budgets.add(Budget(
-                                  name: result['name'],
-                                  allocation: double.parse(result['amount'])));
-                            });
-                          }
-                        },
-                        icon: Icon(
-                          Icons.add_circle_outline,
-                          size: 50,
-                        ));
-                  }
-                  return InkWell(
-                    onTap: () async {
-                      dynamic result = await showDialog(
-                          context: context,
-                          builder: (context) => addBudget(
-                              name: budgets[index].name!,
-                              amount: budgets[index].allocation!.toString()));
-
-                      if (result != null) {
-                        setState(() {
-                          budgets[index] = Budget(
-                              name: result['name'],
-                              allocation: double.parse(result['amount']));
-                        });
-                      }
-                    },
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  budgets.isEmpty
+                      ? Expanded(
+                          child: Center(
                             child: Text(
-                              budgets[index].name!,
+                              'You currently have no budget allocated. Click on the button below to allocate a new budget.',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ),
-                          Text(
-                            'RM${budgets[index].allocation!}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                        )
+                      : SizedBox.shrink(),
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 10);
+                      },
+                      itemCount: budgets.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == budgets.length) {
+                          return IconButton(
+                              padding: EdgeInsets.all(0.0),
+                              onPressed: () async {
+                                dynamic result = await showDialog(
+                                    context: context,
+                                    builder: (context) => addBudget());
+
+                                if (result != null) {
+                                  Budget budget = Budget(
+                                      name: result['name'],
+                                      allocation:
+                                          double.parse(result['amount']));
+
+                                  await db.addBudget(
+                                      budget, AuthService().userId);
+                                }
+                              },
+                              icon: Icon(
+                                Icons.add_circle_outline,
+                                size: 50,
+                              ));
+                        } else {
+                          Budget budget = budgets[index];
+                          return InkWell(
+                            onTap: () async {
+                              dynamic result = await showDialog(
+                                  context: context,
+                                  builder: (context) => addBudget(
+                                      name: budget.name!,
+                                      amount: budget.allocation!.toString()));
+
+                              if (result != null) {
+                                budgets[index] = Budget(
+                                    name: result['name'],
+                                    allocation: double.parse(result['amount']));
+                                await db.updateBudget(
+                                    budgets, AuthService().userId);
+                              }
+                            },
+                            child: Container(
+                              height: 40,
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.black87,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      budgets[index].name!,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    'RM${budget.allocation!.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          );
+                        }
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
