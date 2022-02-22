@@ -122,67 +122,45 @@ class ViewWallet extends StatelessWidget {
               ),
             ),
             SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ManageContainer(
-                  onTap: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => Transactions(bank))),
-                  label: 'Transactions',
-                ),
-                ManageContainer(
-                  onTap: () => Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Budgeting())),
-                  label: 'Budgeting',
-                ),
-                ManageContainer(
-                  onTap: () {},
-                  label: 'Expenses',
-                ),
-              ],
+            InkWell(
+              onTap: () => Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => Transactions(bank))),
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Transactions',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ManageContainer extends StatelessWidget {
-  const ManageContainer({
-    Key? key,
-    required this.onTap,
-    required this.label,
-  }) : super(key: key);
-
-  final Function() onTap;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          SizedBox(height: 3),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -174,13 +174,21 @@ class _BudgetingState extends State<Budgeting> {
     return Form(
       key: _formKey,
       child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text('Add Budget'),
         content: Container(
-          height: 200,
+          height: 160,
           child: Column(
             children: [
               Text('Budget Name*'),
               TextFormField(
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 controller: _nameController,
                 validator: (value) =>
                     value!.isEmpty ? 'Name can\'t be empty' : null,
@@ -188,6 +196,13 @@ class _BudgetingState extends State<Budgeting> {
               SizedBox(height: 15),
               Text('Allocated Amount (RM)*'),
               TextFormField(
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 validator: (value) =>

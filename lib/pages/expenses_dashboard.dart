@@ -1,8 +1,10 @@
 import 'package:amz_finance/models/budget.dart';
 import 'package:amz_finance/models/category_expense.dart';
 import 'package:amz_finance/models/expense.dart';
+import 'package:amz_finance/pages/expense_by_category.dart';
 import 'package:amz_finance/services/auth.dart';
 import 'package:amz_finance/services/database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -22,8 +24,6 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
     'monthly',
   ];
   String _selectedFilter = '';
-
-  List<CategoryExpense> expenseCategory = [];
 
   // getCategoryExpenses() {
   //   for (var item in expenseCategory) {
@@ -47,6 +47,8 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    List<CategoryExpense> expenseCategory = [];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -95,6 +97,8 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                 builder: (context, child) {
                   List<Expense> expenses = Provider.of<List<Expense>>(context);
 
+                  double uncategorizedAmount = 0;
+
                   for (Budget budget in budgets) {
                     CategoryExpense categoryExpense = CategoryExpense(
                         category: budget.name, budget: budget.allocation);
@@ -104,10 +108,19 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                             categoryExpense.spent! + expense.amount!;
                         break;
                       }
-                      if (expense == expenses.last) {}
+                      if (expense == expenses.last) {
+                        uncategorizedAmount += expense.amount!;
+                      }
                     }
                     expenseCategory.add(categoryExpense);
                   }
+
+                  expenseCategory.add(CategoryExpense(
+                      category: 'Uncategorized',
+                      budget: 0,
+                      spent: uncategorizedAmount));
+
+                  print(expenseCategory.first.category.toString());
 
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -136,24 +149,30 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                           legend: Legend(
                               isVisible: true, position: LegendPosition.bottom),
                           series: <ChartSeries<CategoryExpense, String>>[
-                            StackedColumnSeries(
+                            ColumnSeries(
                                 dataSource: expenseCategory,
                                 xValueMapper: (CategoryExpense expense, _) =>
                                     expense.category,
                                 yValueMapper: (CategoryExpense expense, _) =>
                                     expense.spent,
                                 name: 'Expenses',
-                                dataLabelSettings:
-                                    DataLabelSettings(isVisible: true)),
-                            StackedColumnSeries(
+                                dataLabelSettings: DataLabelSettings(
+                                  showZeroValue: false,
+                                  isVisible: true,
+                                  labelPosition: ChartDataLabelPosition.outside,
+                                )),
+                            ColumnSeries(
                                 dataSource: expenseCategory,
                                 xValueMapper: (CategoryExpense expense, _) =>
                                     expense.category,
                                 yValueMapper: (CategoryExpense expense, _) =>
                                     expense.budget,
                                 name: 'Budgets',
-                                dataLabelSettings:
-                                    DataLabelSettings(isVisible: true))
+                                dataLabelSettings: DataLabelSettings(
+                                    showZeroValue: false,
+                                    isVisible: true,
+                                    labelPosition:
+                                        ChartDataLabelPosition.inside))
                           ],
                         ),
                         SizedBox(height: 20),
@@ -172,8 +191,14 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                             itemBuilder: (context, index) {
                               Budget budget = budgets[index];
 
+                              print('index: ${index}');
+
                               return InkWell(
-                                onTap: () async {},
+                                onTap: () async => Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => ExpenseByCategory(
+                                            expenseCategory[index + 1]))),
                                 child: Container(
                                   height: 40,
                                   alignment: Alignment.centerLeft,

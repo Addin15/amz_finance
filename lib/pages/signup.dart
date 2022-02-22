@@ -1,13 +1,14 @@
-import 'package:amz_finance/pages/signup.dart';
 import 'package:amz_finance/services/auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatelessWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _nameController = TextEditingController();
     TextEditingController _emailController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
 
@@ -23,6 +24,21 @@ class SignIn extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('Name'),
+                SizedBox(height: 5),
+                TextFormField(
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  controller: _nameController,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Name can\'t be empty' : null,
+                ),
+                SizedBox(height: 20),
                 Text('Email'),
                 SizedBox(height: 5),
                 TextFormField(
@@ -59,11 +75,13 @@ class SignIn extends StatelessWidget {
                   children: [
                     TextButton(
                         style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: Colors.green)),
                           padding: MaterialStateProperty.all(
                               EdgeInsets.symmetric(
                                   horizontal: 30, vertical: 10)),
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
+                              MaterialStateProperty.all(Colors.white),
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -74,7 +92,7 @@ class SignIn extends StatelessWidget {
                         },
                         child: Text(
                           'Sign In',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.green),
                         )),
                     TextButton(
                         style: ButtonStyle(
@@ -84,17 +102,23 @@ class SignIn extends StatelessWidget {
                               EdgeInsets.symmetric(
                                   horizontal: 30, vertical: 10)),
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.white),
+                              MaterialStateProperty.all(Colors.green),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => SignUp()));
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            AuthService authService = AuthService();
+                            await authService.signUp(
+                              _emailController.text,
+                              _passwordController.text,
+                              _nameController.text,
+                            );
+
+                            Navigator.pop(context);
+                          }
                         },
                         child: Text(
                           'Sign Up',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(color: Colors.white),
                         )),
                   ],
                 ),

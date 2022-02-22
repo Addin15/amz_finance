@@ -52,7 +52,103 @@ class DatabaseService {
         .doc(uid)
         .collection('usertransactions')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Expense.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Expense.fromJson(doc.id, doc.data()))
+            .toList());
+  }
+
+  Stream<List<Expense>> streamExpensesByBank(String uid, String account) {
+    return _db
+        .collection('transactions')
+        .doc(uid)
+        .collection('usertransactions')
+        .where('acc', isEqualTo: account)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Expense.fromJson(doc.id, doc.data()))
+            .toList());
+  }
+
+  Future<List<Expense>> getExpenses(String uid, String category) async {
+    try {
+      print(category);
+      QuerySnapshot<Map<String, dynamic>> data = await _db
+          .collection('transactions')
+          .doc(uid)
+          .collection('usertransactions')
+          .where('category', isEqualTo: category)
+          .get();
+
+      return data.docs
+          .map((doc) => Expense.fromJson(doc.id, doc.data()))
+          .toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<bool> addBank(Bank bank, String uid) async {
+    try {
+      await _db
+          .collection('accounts')
+          .doc(uid)
+          .collection('bankaccounts')
+          .doc(bank.accountNumber)
+          .set({
+        'accountType': bank.accountType,
+        'balance': bank.balance,
+        'bank': bank.bank,
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> categorizeExpense(
+      String uid, String transactionId, String category) async {
+    try {
+      await _db
+          .collection('transactions')
+          .doc(uid)
+          .collection('usertransactions')
+          .doc(transactionId)
+          .update({
+        'category': category,
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> addTransaction(String uid, Expense expense) async {
+    try {
+      await _db
+          .collection('transactions')
+          .doc(uid)
+          .collection('usertransactions')
+          .doc(expense.timestamp!.millisecondsSinceEpoch.toString())
+          .set({
+        'acc': expense.account,
+        'amount': expense.amount,
+        'category': expense.category,
+        'date': expense.timestamp,
+        'description': expense.description,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<String> getUserName(String uid) async {
+    return await _db
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((user) => user.get('name'));
   }
 }
