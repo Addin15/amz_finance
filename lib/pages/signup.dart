@@ -84,11 +84,7 @@ class SignUp extends StatelessWidget {
                               MaterialStateProperty.all(Colors.white),
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            AuthService authService = AuthService();
-                            authService.signIn(_emailController.text,
-                                _passwordController.text);
-                          }
+                          Navigator.pop(context);
                         },
                         child: Text(
                           'Sign In',
