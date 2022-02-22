@@ -75,9 +75,6 @@ class _ExpenseByCategoryState extends State<ExpenseByCategory> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    child: Text('a'),
-                  ),
-                  Container(
                     margin: const EdgeInsets.symmetric(horizontal: 30),
                     child: Row(
                       children: [

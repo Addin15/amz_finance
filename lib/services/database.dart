@@ -138,6 +138,16 @@ class DatabaseService {
         'date': expense.timestamp,
         'description': expense.description,
       });
+
+      await _db
+          .collection('accounts')
+          .doc(uid)
+          .collection('bankaccounts')
+          .doc(expense.account)
+          .update({
+        'balance':
+            FieldValue.increment(num.parse((expense.amount! * -1).toString())),
+      });
       return true;
     } catch (e) {
       return false;
