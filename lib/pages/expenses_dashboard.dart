@@ -106,21 +106,19 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                       if (expense.category == budget.name) {
                         categoryExpense.spent =
                             categoryExpense.spent! + expense.amount!;
-                        break;
-                      }
-                      if (expense == expenses.last) {
+                      } else if (expense == expenses.last) {
                         uncategorizedAmount += expense.amount!;
                       }
                     }
                     expenseCategory.add(categoryExpense);
                   }
 
-                  expenseCategory.add(CategoryExpense(
-                      category: 'Uncategorized',
-                      budget: 0,
-                      spent: uncategorizedAmount));
+                  // expenseCategory.add(CategoryExpense(
+                  //     category: 'Uncategorized',
+                  //     budget: 0,
+                  //     spent: uncategorizedAmount));
 
-                  print(expenseCategory.first.category.toString());
+                  //print(expenseCategory.first.category.toString());
 
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -198,7 +196,7 @@ class _ExpensesDashboardState extends State<ExpensesDashboard> {
                                     context,
                                     CupertinoPageRoute(
                                         builder: (context) => ExpenseByCategory(
-                                            expenseCategory[index + 1]))),
+                                            expenseCategory[index]))),
                                 child: Container(
                                   height: 40,
                                   alignment: Alignment.centerLeft,
